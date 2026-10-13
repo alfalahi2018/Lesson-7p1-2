@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fort Ticket Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B2A4A;--sea:#0F8B8D;--sun:#FFB703;--coral:#E4572E;--mint:#06A77D;--soft:#F1F5FB;--line:#B8CBE0;--chip:#EAF7F7;
+--d:"Baloo 2","Trebuchet MS",system-ui,sans-serif;--b:"Nunito","Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--b);font-weight:700;color:var(--navy);background:linear-gradient(170deg,#6EC1E4,#FFD39A) fixed;min-height:100vh;line-height:1.45;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:820px;margin:0 auto;padding:10px 12px 24px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:4px 2px 10px}
+.brand{font:800 1.25rem var(--d);color:#fff;text-shadow:0 2px 0 rgba(11,42,74,.45)}
+.pills{display:flex;gap:6px;align-items:center}
+.pill,select{background:#fff;color:var(--navy);border:0;border-radius:999px;padding:4px 12px;font:800 1rem var(--d);min-height:38px}
+button{font-family:inherit;cursor:pointer}
+.panel{background:#fff;border-radius:22px;padding:16px;box-shadow:0 6px 0 rgba(11,42,74,.18);margin-bottom:14px}
+h1,h2,h3{font-family:var(--d);margin:.2em 0;line-height:1.15}
+.lead{margin:.3em 0 .8em;font-size:1.05rem}.small{font-size:.9rem;opacity:.8}
+.hero{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 6px 0 rgba(11,42,74,.25);margin-bottom:14px}
+.hero svg{display:block;width:100%;height:auto}
+.ht{position:absolute;inset:0 0 auto 0;padding:14px 18px;color:#fff;text-shadow:0 3px 0 rgba(11,42,74,.5)}
+.ht h1{font-size:clamp(1.8rem,7vw,3rem);margin:0}.ht p{margin:.2em 0 0}
+.btn{background:var(--coral);color:#fff;border:0;border-radius:999px;padding:11px 22px;font:800 1.1rem var(--d);min-height:46px;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.btn.g{background:var(--soft);color:var(--navy)}.btn:disabled{opacity:.45}
+.btn:focus-visible,.stop:focus-visible,.opt:focus-visible,.cir:focus-visible,.chip:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+input{font:inherit;font-weight:800;padding:12px 14px;border-radius:14px;border:3px solid var(--line);width:100%;max-width:340px}
+.bar0{height:14px;border-radius:99px;background:var(--soft);overflow:hidden;margin:6px 0 14px}.bar0 i{display:block;height:100%;background:linear-gradient(90deg,var(--sun),var(--coral));transition:width .5s}
+.stops{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.stop{background:var(--soft);border:3px solid var(--line);border-radius:20px;padding:12px;text-align:center;color:var(--navy);min-height:128px;position:relative}
+.stop .em{font-size:2.1rem;display:block}.stop b{font:800 1.05rem var(--d);display:block}.stop .t{font-size:.82rem;color:var(--sea)}.stop .s{display:block;letter-spacing:2px}
+.stop.done{border-color:var(--mint);background:var(--chip)}
+.lh{display:flex;gap:12px;align-items:center;margin:4px 0 10px;color:#fff;text-shadow:0 2px 0 rgba(11,42,74,.45)}.lh h2{margin:0}.lh p{margin:0;font-size:.9rem}
+.back{background:#fff;color:var(--navy);border:0;border-radius:999px;padding:8px 14px;font-weight:800;min-height:40px;text-shadow:none}
+.chip{display:inline-flex;align-items:center;padding:9px 13px;margin:4px;background:var(--chip);border:2px solid var(--sea);border-radius:14px;font-weight:800;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;box-shadow:0 3px 0 rgba(15,139,141,.35)}
+.chip.dragging{opacity:.25}.chip.selected{outline:3px solid var(--sun)}.chip.good{background:#C9F7E4;border-color:var(--mint);box-shadow:none;cursor:default}
+.ghost{position:fixed;z-index:1000;pointer-events:none;transform:rotate(4deg) scale(1.05);box-shadow:0 10px 20px rgba(0,0,0,.3)}
+.shake{animation:sh .45s}@keyframes sh{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.zone.over{outline:3px dashed var(--sun);background:rgba(255,183,3,.18)}
+.slot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:58px;border:2px dashed var(--line);border-radius:14px;padding:4px 10px;margin:7px 0;background:var(--soft)}
+.slot .sl{flex:1;min-width:130px}.no{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-family:var(--d)}
+.pool{display:flex;flex-wrap:wrap;justify-content:center;min-height:70px;border:2px dashed var(--line);border-radius:16px;padding:6px;margin-top:12px}
+.bks{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bk{border:3px dashed var(--line);border-radius:18px;padding:8px;min-height:190px;background:var(--soft)}
+.bk h3{margin:0;font-size:1.3rem}.bk p{margin:0 0 4px;font-size:.85rem}
+.sent{font-size:1.3rem;font-weight:800;text-align:center;margin:.4em 0}
+.gap{display:inline-block;min-width:110px;border-bottom:4px dashed var(--coral);text-align:center;padding:2px 8px;margin:0 4px;border-radius:8px}.gap.good{border-bottom-color:var(--mint);background:#C9F7E4}
+.dots{display:flex;gap:6px;justify-content:center;margin-bottom:6px}.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--sun)}.dots i.ok{background:var(--mint)}
+#msg,#fb{margin-top:10px;font-weight:800;min-height:1.3em}
+.fb{padding:10px 14px;border-radius:14px;margin-bottom:10px}.fb.good{background:#C9F7E4}.fb.bad{background:#FFD9E0;color:#5A0B1E}
+.cq{padding:10px 0;border-bottom:2px solid var(--soft);font-size:1.12rem}
+.cir{background:none;border:3px solid transparent;border-radius:50%/60%;padding:2px 12px;font:inherit;font-weight:800;color:var(--navy);margin:0 3px}
+.cir.on{border-color:var(--coral);transform:rotate(-2deg)}.cir.ok{border-color:var(--mint);background:#C9F7E4}.cir.no{border-color:var(--coral);background:#FFD9E0}
+.qb{height:14px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:12px}.qb i{display:block;height:100%;width:100%;background:var(--mint)}.qb i.hot{background:var(--coral)}
+.qh{display:flex;justify-content:space-between;margin-bottom:6px}.qt{font-size:1.25rem;font-weight:800;margin:.2em 0 .7em}
+.price{background:#FFF3C4;border-radius:14px;padding:8px 12px;margin-bottom:10px;text-align:center}
+.opts{display:grid;gap:10px;margin-bottom:10px}
+.opt{background:var(--soft);color:var(--navy);border:3px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;font-weight:800;font-size:1.05rem;min-height:50px}
+.opt.good{background:#C9F7E4;border-color:var(--mint)}.opt.bad{background:#FFD9E0;border-color:var(--coral)}
+.ov{position:fixed;inset:0;background:rgba(11,42,74,.65);display:grid;place-items:center;z-index:900;padding:16px}
+.md{background:#fff;border-radius:26px;padding:22px;max-width:380px;width:100%;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.25);animation:pp .35s}@keyframes pp{from{transform:scale(.7);opacity:0}}
+.md .big{font-size:2.6rem;letter-spacing:4px}.md .row{justify-content:center}
+.fp{position:fixed;z-index:1100;pointer-events:none;transform:translateX(-50%);font:800 1.5rem var(--d);color:var(--mint);text-shadow:0 2px 0 #fff;animation:up .9s forwards}@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:1200}
+.cert{text-align:center;border:6px double var(--sun)}.cert .cn{font-size:clamp(2rem,9vw,3.2rem);color:var(--coral);margin:.1em 0}
+.foot{text-align:center;color:#fff;font-weight:800;text-shadow:0 1px 0 rgba(11,42,74,.6);padding:6px}
+@media print{body{background:#fff}.nop,.top,.foot{display:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="cf" aria-hidden="true"></canvas>
+<div class="wrap">
+ <div class="top"><div class="brand">🎟️ Fort Ticket Quest</div>
+  <div class="pills"><select id="jump" aria-label="Go to any level"></select><span class="pill">⭐ <span id="score">0</span></span><button class="pill" id="mute" aria-label="Sound on or off">🔊</button></div></div>
+ <main id="screen"></main>
+ <div class="foot">Created by T.Badria Alfalahi</div>
+</div>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const S=$('#screen'),st={name:'',score:0,stars:{}};
+let sel=null,timer=null,muted=false,ac=null;
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tone(f,d=.12,t='sine',w=0,v=.07){if(muted)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ac.destination);const x=ac.currentTime+w;o.start(x);g.gain.exponentialRampToValueAtTime(.0001,x+d);o.stop(x+d+.03)}catch(e){}}
+const sfx={ok(){tone(660,.1,'triangle');tone(880,.15,'triangle',.09)},no(){tone(170,.25,'sawtooth',0,.05)},tick(){tone(900,.04,'square',0,.025)},win(){[523,659,784,1047].forEach((f,i)=>tone(f,.2,'triangle',i*.11))}};
+function speak(t){if(muted)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.9;speechSynthesis.speak(u)}catch(e){}}
+$('#mute').onclick=()=>{muted=!muted;$('#mute').textContent=muted?'🔇':'🔊'};
+const upd=()=>$('#score').textContent=st.score;
+function pop(t,el){if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div');d.className='fp';d.textContent=t;d.style.left=r.left+r.width/2+'px';d.style.top=r.top+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),950)}
+function confetti(){if(calm)return;const c=$('#cf'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const k=['#FFB703','#E4572E','#06D6A0','#118AB2','#fff'];const P=Array.from({length:130},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.4,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,s:6+Math.random()*7,r:Math.random()*6,c:k[Math.random()*5|0]}));let f=0;(function l(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=.12;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);x.restore()});if(++f<200)requestAnimationFrame(l);else x.clearRect(0,0,c.width,c.height)})()}
+const stopT=()=>{if(timer){clearInterval(timer);timer=null}};
+function modal({e,t,x,b}){const o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="md" role="dialog" aria-modal="true"><div class="big">${e}</div><h3>${t}</h3><p>${x}</p><div class="row">${b.map((q,i)=>`<button class="btn ${q.c||''}" data-i="${i}">${q.l}</button>`).join('')}</div></div>`;document.body.appendChild(o);$$('button',o).forEach(q=>q.onclick=()=>{o.remove();b[+q.dataset.i].f()});$('button',o).focus()}
+function shell(n,body){stopT();sel=null;const L=LV[n-1];$('#jump').value=n;S.innerHTML=`<section><div class="lh"><button class="back" id="bk">🗺️ Map</button><div><h2>${L.e} ${L.t}</h2><p>${L.k}</p></div></div>${body}</section>`;$('#bk').onclick=hub;scrollTo(0,0)}
+function finish(n,s,x){stopT();st.stars[n]=Math.max(st.stars[n]||0,s);sfx.win();confetti();
+ modal({e:'⭐'.repeat(s)+'☆'.repeat(3-s),t:s==3?'Fantastic!':s==2?'Great job!':'Good try!',x:x+' You earned a stamp!',b:[{l:'Play again',c:'g',f:()=>LV[n-1].run()},{l:'Level map',c:'g',f:hub},...(n<LV.length?[{l:'Next ✈️',f:()=>LV[n].run()}]:[])]})}
+function fail(n){stopT();sfx.no();modal({e:'💔',t:'Out of hearts!',x:'Read again and try once more.',b:[{l:'Level map',c:'g',f:hub},{l:'Try again',f:()=>LV[n-1].run()}]})}
+
+/* drag and drop: mouse, touch, or tap a word then tap the place */
+const zoneAt=(x,y)=>document.elementsFromPoint(x,y).find(e=>e.classList&&e.classList.contains('zone'));
+function dnd(root,drop){
+ root.addEventListener('pointerdown',e=>{
+  const c=e.target.closest('.chip');if(!c||c.classList.contains('locked')||e.button>0)return;
+  const sx=e.clientX,sy=e.clientY,r=c.getBoundingClientRect();let g=null;
+  const mv=v=>{if(!g&&Math.hypot(v.clientX-sx,v.clientY-sy)>6){g=c.cloneNode(true);g.classList.add('ghost');g.style.width=r.width+'px';document.body.appendChild(g);c.classList.add('dragging')}
+   if(g){g.style.left=v.clientX-r.width/2+'px';g.style.top=v.clientY-r.height/2+'px';$$('.zone.over').forEach(z=>z.classList.remove('over'));const z=zoneAt(v.clientX,v.clientY);if(z)z.classList.add('over')}};
+  const up=v=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);$$('.zone.over').forEach(z=>z.classList.remove('over'));
+   if(g){g.remove();c.classList.remove('dragging');const z=zoneAt(v.clientX,v.clientY);if(z&&root.contains(z))drop(c,z)}
+   else if(sel===c){c.classList.remove('selected');sel=null}else{$$('.chip.selected').forEach(q=>q.classList.remove('selected'));c.classList.add('selected');sel=c}};
+  addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)});
+ root.addEventListener('click',e=>{const z=e.target.closest('.zone');if(z&&sel&&!e.target.closest('.chip')){const c=sel;sel=null;c.classList.remove('selected');drop(c,z)}})}
+
+/* ---- reusable activity: put cards into slots (order a dialogue, match Q and A) ---- */
+function slotGame(n,o){
+ let tries=0;
+ shell(n,`<div class="panel"><p class="lead">${o.lead}</p><div id="area">${o.slots.map(s=>`<div class="slot zone" data-id="${s.id}"><span class="sl">${s.l}</span></div>`).join('')}<div class="pool zone" id="pool">${shuffle(o.chips).map(c=>`<div class="chip" data-id="${c.id}">${c.t}</div>`).join('')}</div></div><div class="row"><button class="btn" id="ck">Check ✔️</button></div><div id="msg"></div></div>`);
+ dnd($('#area'),(c,z)=>{if(c.classList.contains('locked'))return;const from=c.parentElement;
+  if(z.id==='pool'){z.appendChild(c);return}
+  const old=$('.chip',z);if(old&&old!==c){if(old.classList.contains('locked'))return;from.appendChild(old)}
+  z.appendChild(c);sfx.tick()});
+ $('#ck').onclick=()=>{tries++;let ok=0,empty=0;
+  $$('.slot').forEach(s=>{const c=$('.chip',s);if(!c){empty++;return}
+   if(c.classList.contains('locked')){ok++;return}
+   if(c.dataset.id===s.dataset.id){c.classList.add('locked','good');ok++;st.score+=15;pop('+15',c);if(o.say)speak(c.textContent)}
+   else{c.classList.add('shake');setTimeout(()=>{c.classList.remove('shake');$('#pool').appendChild(c)},500)}});
+  upd();
+  if(ok===o.slots.length)finish(n,tries==1?3:tries<=3?2:1,o.done);
+  else{sfx.no();$('#msg').textContent=empty?`Fill every place first. ${ok} correct so far.`:`${ok} correct. The wrong cards flew back. Try again!`}}}
+
+/* ---- reusable activity: sort cards into two boxes ---- */
+function sortGame(n,o){
+ let bad=0,left=o.items.length;
+ shell(n,`<div class="panel"><p class="lead">${o.lead}</p><div id="area"><div class="bks">${o.bk.map(b=>`<div class="bk zone" data-k="${b.k}" style="border-color:${b.c}"><h3>${b.h}</h3><p>${b.p}</p><div class="bl"></div></div>`).join('')}</div><div class="pool" id="pool">${shuffle(o.items).map(i=>`<div class="chip" data-k="${i[1]}">${i[0]}</div>`).join('')}</div></div><div id="msg"></div></div>`);
+ dnd($('#area'),(c,z)=>{if(!z.classList.contains('bk')||c.classList.contains('locked'))return;
+  if(c.dataset.k===z.dataset.k){$('.bl',z).appendChild(c);c.classList.add('locked','good');st.score+=10;upd();pop('+10',c);sfx.ok();if(o.say)speak(c.textContent);left--;$('#msg').textContent='';
+   if(!left)setTimeout(()=>finish(n,bad<=2?3:bad<=5?2:1,`You sorted everything with ${bad} mistake${bad==1?'':'s'}.`),500)}
+  else{bad++;sfx.no();c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),450);$('#msg').textContent=o.hint}})}
+
+/* ---- timed quiz with hearts ---- */
+function quiz(n,o){
+ let i=0,right=0,hp=o.lives;
+ shell(n,`<div class="panel">${o.banner||''}<div class="qh"><span id="qn"></span><span id="hp"></span></div><div class="qb"><i id="bar"></i></div><div id="qx"></div></div>`);
+ const hearts=()=>$('#hp').textContent='❤️'.repeat(hp)+'🖤'.repeat(o.lives-hp);
+ function show(){const q=o.qs[i];$('#qn').textContent=`Question ${i+1} of ${o.qs.length}`;hearts();
+  $('#qx').innerHTML=`<p class="qt">${q.q}</p><div class="opts">${shuffle(q.o).map(x=>`<button class="opt" data-o="${esc(x)}">${x}</button>`).join('')}</div><div id="fb"></div>`;
+  const tot=o.time*10;let left=tot,done=false;const bar=$('#bar');bar.style.width='100%';bar.classList.remove('hot');stopT();
+  timer=setInterval(()=>{left--;bar.style.width=Math.max(0,left/tot*100)+'%';if(left<=tot*.3){bar.classList.add('hot');if(left%10==0)sfx.tick()}if(left<=0)ans(null,null)},100);
+  $$('.opt').forEach(b=>b.onclick=()=>ans(b.dataset.o,b));
+  function ans(v,b){if(done)return;done=true;stopT();const ok=v!==null&&v===q.a;
+   $$('.opt').forEach(x=>{x.disabled=true;if(x.dataset.o===q.a)x.classList.add('good');else if(x===b)x.classList.add('bad')});
+   if(ok){right++;const g=10+Math.round(Math.max(0,left)/tot*10);st.score+=g;sfx.ok();pop('+'+g,b)}else{sfx.no();hp--;hearts()}
+   upd();const last=i==o.qs.length-1;
+   $('#fb').innerHTML=`<div class="fb ${ok?'good':'bad'}">${ok?'🎉 Correct!':v===null?'⏰ Time is up!':'Not this time.'} ${q.x||''}</div><button class="btn" id="nx">${hp==0?'Continue':last?'Finish':'Next question'}</button>`;
+   $('#nx').focus();$('#nx').onclick=()=>{if(hp==0)return fail(n);if(last){const r=right/o.qs.length;finish(n,r>=.85?3:r>=.6?2:1,`You got ${right} out of ${o.qs.length}.`)}else{i++;show()}}}}
+ show()}
+
+/* ---- level 3: circle the correct answer ---- */
+function circle(n){
+ const Q=[['The boy is with his','family','friends'],['He is going to','visit a fort','watch a play'],['The man asks, "Adults or','children','teachers'],['A guide costs','ten rials','two rials'],['The total is','29 rials','19 rials'],['The guide gives information about the','fort','zoo']].map(q=>({p:q[0],a:q[1],o:shuffle([q[1],q[2]])}));
+ let tries=0;
+ shell(n,`<div class="panel"><p class="lead">Read the ticket booth dialogue again. <b>Tap</b> the correct answer to circle it.</p>${Q.map((q,i)=>`<div class="cq" data-i="${i}">${q.p} ${q.o.map(x=>`<button class="cir" data-v="${esc(x)}">${x}</button>`).join(' / ')}${q.p.includes('"')?'?"':'.'}</div>`).join('')}<div class="row"><button class="btn" id="ck">Check ✔️</button></div><div id="msg"></div></div>`);
+ $$('.cq').forEach(r=>$$('.cir',r).forEach(b=>b.onclick=()=>{if(b.classList.contains('ok'))return;$$('.cir',r).forEach(x=>x.classList.remove('on'));b.classList.add('on');sfx.tick()}));
+ $('#ck').onclick=()=>{tries++;let ok=0,none=0;
+  $$('.cq').forEach(r=>{const q=Q[+r.dataset.i],on=$('.cir.on',r);if($('.cir.ok',r)){ok++;return}if(!on){none++;return}
+   if(on.dataset.v===q.a){on.classList.replace('on','ok');ok++;st.score+=10;pop('+10',on)}else{on.classList.replace('on','no');setTimeout(()=>on.classList.remove('no'),700)}});
+  upd();if(ok==Q.length)finish(n,tries==1?3:tries<=3?2:1,'You circled every answer!');else{sfx.no();$('#msg').textContent=none?'Circle one answer in every sentence first.':`${ok} correct. Look at the dialogue and try the red ones again!`}}}
+
+/* ---- level 4: complete the sentence ---- */
+function gaps(n){
+ const Q=[['The boy buys four ___.','tickets',['tickets','guides','sisters'],'🎟️'],['He is at a fort with his two ___.','sisters',['sisters','rials','tickets'],'🏰'],['He is going to find out about the fort from a ___.','guide',['guide','ticket','doctor'],'🧭'],['He needs to give the man 29 ___.','rials',['rials','children','adults'],'💰'],['Can I have two tickets, ___?','please',['please','guide','rials'],'🙏'],['Adults or ___?','children',['children','tickets','fort'],'🧒'],['How ___ is a guide?','much',['much','many','long'],'❓'],["That's 10 rials in ___.",'total',['total','guide','fort'],'🧮']];
+ let i=0,bad=0,lock=false;
+ shell(n,`<div class="panel"><div class="dots" id="dots"></div><div id="sg"></div></div>`);
+ function show(){lock=false;const q=Q[i],[a,b]=q[0].split('___');$('#dots').innerHTML=Q.map((_,k)=>`<i class="${k<i?'ok':k==i?'on':''}"></i>`).join('');
+  $('#sg').innerHTML=`<div style="text-align:center;font-size:3rem">${q[3]}</div><p class="sent">${a}<span class="gap zone" id="gap">?</span>${b}</p><p class="small" style="text-align:center">Drag the correct word into the gap.</p><div class="pool">${shuffle(q[2]).map(w=>`<div class="chip" data-w="${w}">${w}</div>`).join('')}</div><div id="msg"></div>`}
+ dnd($('#sg'),(c,z)=>{if(z.id!=='gap'||lock)return;const q=Q[i];
+  if(c.dataset.w===q[1]){lock=true;z.textContent=q[1];z.classList.add('good');c.style.visibility='hidden';st.score+=10;upd();pop('+10',z);sfx.ok();speak(q[0].replace('___',q[1]));
+   setTimeout(()=>{i++;if(i<Q.length)show();else finish(n,bad<=1?3:bad<=4?2:1,`You finished with ${bad} mistake${bad==1?'':'s'}.`)},1500)}
+  else{bad++;sfx.no();c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),450);$('#msg').textContent='Not quite. Read the whole sentence and think again!'}});
+ show()}
+
+/* ---- levels ---- */
+const D=['Hello, can I help you?','Can I have four tickets, please?','Adults or children?','One adult and three children, please.',"OK. That's 19 rials. Would you like to have a guide?",'How much is a guide?',"It's ten rials for a guide."];
+const LV=[
+ {t:'Ticket Booth Order',k:'Drag and Drop',e:'🎫',run:()=>slotGame(1,{say:1,lead:'Put the dialogue at the fort in the right order. Drag each line into its place.',slots:D.map((_,i)=>({id:i,l:`<span class="no">${i+1}</span>`})),chips:D.map((t,i)=>({id:i,t})),done:'You rebuilt the whole dialogue!'})},
+ {t:'Who Says It?',k:'Drag and Sort',e:'🗣️',run:()=>sortGame(2,{lead:'Is it the <b>Customer</b> or the <b>Ticket seller</b>? Drag each sentence to the right box.',hint:'Think: who asks for tickets, and who sells them?',bk:[{k:'c',h:'🧑 Customer',p:'Buys the tickets',c:'#FFB703'},{k:'t',h:'🎟️ Ticket seller',p:'Sells the tickets',c:'#0F8B8D'}],items:[['Can I have four tickets, please?','c'],["I don't know. How much is a guide?",'c'],['OK, then. Yes, please.','c'],['Alright. Here you are.','c'],['One adult and one child, please.','c'],['Yes. Can I have two tickets, please?','c'],['Hello, can I help you?','t'],['Adults or children?','t'],["That's 19 rials.",'t'],['Here are your tickets. Enjoy the fort!','t'],['Would you like to have a guide?','t'],["Great. That's 10 rials in total.",'t']]})},
+ {t:'Circle It!',k:'Circle the Answer',e:'⭕',run:()=>circle(3)},
+ {t:'Complete the Sentence',k:'Drag into the Gap',e:'🧩',run:()=>gaps(4)},
+ {t:'Ticket Maths',k:'Timed Quiz with Hearts',e:'🧮',run:()=>quiz(5,{time:25,lives:3,banner:'<div class="price">💰 <b>Price list:</b> Adult 4 rials. Child 2 rials. Guide 3 rials.</div>',qs:[{q:'You buy 1 adult ticket and 2 child tickets. How much is it?',o:['6 rials','8 rials','10 rials'],a:'8 rials',x:'4 + 2 + 2 = 8 rials.'},{q:'You buy 2 adult tickets and a guide. What is the total?',o:['9 rials','11 rials','14 rials'],a:'11 rials',x:'4 + 4 + 3 = 11 rials.'},{q:'1 adult, 1 child and a guide. How much is it?',o:['9 rials','8 rials','10 rials'],a:'9 rials',x:'4 + 2 + 3 = 9 rials.'},{q:'You buy 3 child tickets. How much is it?',o:['5 rials','6 rials','9 rials'],a:'6 rials',x:'2 + 2 + 2 = 6 rials.'},{q:'2 adults and 2 children. What is the total?',o:['10 rials','12 rials','16 rials'],a:'12 rials',x:'8 + 4 = 12 rials.'},{q:'1 adult, 3 children and a guide. What is the total?',o:['13 rials','11 rials','15 rials'],a:'13 rials',x:'4 + 6 + 3 = 13 rials.'}]})},
+ {t:'-er or -or?',k:'Pronunciation Sort',e:'🎭',run:()=>sortGame(6,{say:1,lead:'Both endings sound like /ə/ but they are spelled differently. Sort the jobs!',hint:'Check the spelling at the end of the word.',bk:[{k:'er',h:'-er',p:'writer, performer...',c:'#FFB703'},{k:'or',h:'-or',p:'doctor, actor...',c:'#0F8B8D'}],items:[['writer','er'],['performer','er'],['designer','er'],['teacher','er'],['farmer','er'],['baker','er'],['doctor','or'],['actor','or'],['director','or'],['editor','or'],['operator','or'],['sailor','or']]})},
+ {t:'Match Q and A',k:'Listen and Match',e:'🔗',run:()=>slotGame(7,{say:1,lead:'Drag each answer to the question it belongs to.',slots:[['Have you ever wanted to be a writer?'],['This performer is rather boring.'],['Is your brother going to be an actor?'],['Do you want to order anything?']].map((q,i)=>({id:i,l:`<b>${i+1}.</b> ${q[0]}`})),chips:['No, never. I want to be a doctor.',"No, she isn't! She's great! That's my sister!","No, he isn't. He wants to be a film director.","I'd like another glass of water, please."].map((t,i)=>({id:i,t})),done:'All the questions and answers match!'})}
+];
+$('#jump').innerHTML='<option value="">Go to level...</option>'+LV.map((l,i)=>`<option value="${i+1}">${i+1}. ${l.t}</option>`).join('');
+$('#jump').onchange=e=>{if(e.target.value)LV[+e.target.value-1].run()};
+
+/* ---- screens ---- */
+const SKY=`<svg viewBox="0 0 800 240" role="img" aria-label="Illustration of an Omani fort"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4DB3E6"/><stop offset=".7" stop-color="#FFD9A0"/></linearGradient></defs><rect width="800" height="240" fill="url(#g)"/><circle cx="670" cy="95" r="42" fill="#FFB703"/><path d="M0 195q120-55 250-10t260-25 290 25v55H0z" fill="#E7B873"/><g fill="#C98E52"><rect x="250" y="125" width="300" height="90"/><rect x="225" y="70" width="64" height="145"/><rect x="511" y="70" width="64" height="145"/><rect x="360" y="92" width="80" height="123"/></g><path d="M222 66h70M508 66h70M356 88h88M250 121h110M440 121h110" stroke="#C98E52" stroke-width="12" stroke-dasharray="12 10"/><path d="M385 215v-40a15 15 0 0 1 30 0v40z" fill="#5A3420"/><g fill="#5A3420"><rect x="250" y="100" width="12" height="22" rx="6"/><rect x="538" y="100" width="12" height="22" rx="6"/></g><path d="M80 215q-8-48 6-84" stroke="#5A3420" stroke-width="6" fill="none"/><g fill="#06A77D"><path d="M86 131q-34-12-52 8q30-4 52-8z"/><path d="M86 131q34-14 54 6q-32-1-54-6z"/><path d="M86 131q-8-28-34-32q20 10 34 32z"/><path d="M86 131q12-28 36-30q-22 8-36 30z"/></g><rect y="215" width="800" height="25" fill="#E7B873"/></svg>`;
+function start(){stopT();S.innerHTML=`<div class="hero">${SKY}<div class="ht"><h1>Fort Ticket Quest</h1><p>Grade 7 English. English in Action: Buying Tickets</p></div></div><section class="panel"><h2>Ready to visit the fort?</h2><p class="lead">Learn how to buy tickets! Play 7 fun activities in any order you like. You can start any level at any time.</p><label for="nm" class="small">Your explorer name</label><br><input id="nm" maxlength="24" placeholder="Type your name" autocomplete="off"><div class="row"><button class="btn" id="go" style="font-size:1.3rem;padding:14px 28px">Start the adventure ✈️</button></div></section>`;
+ const go=()=>{st.name=$('#nm').value.trim()||'Explorer';sfx.ok();hub()};$('#go').onclick=go;$('#nm').onkeydown=e=>{if(e.key==='Enter')go()}}
+function hub(){stopT();sel=null;$('#jump').value='';const d=Object.keys(st.stars).length,N=LV.length;
+ S.innerHTML=`<section class="panel"><h2>🛂 ${esc(st.name||'Explorer')}'s Passport</h2><p class="lead">Choose any level you like. Win stars to collect stamps.</p><div class="bar0"><i style="width:${d/N*100}%"></i></div><div class="stops">${LV.map((l,i)=>{const s=st.stars[i+1]||0;return `<button class="stop ${s?'done':''}" data-n="${i+1}"><span class="em">${l.e}</span><b>${l.t}</b><span class="t">${l.k}</span><span class="s" aria-label="${s} stars">${s?'⭐'.repeat(s)+'☆'.repeat(3-s):'☆☆☆'}</span></button>`}).join('')}</div><button class="btn" id="ct" ${d<N?'disabled':''}>🎓 Get my certificate</button>${d<N?`<p class="small">Collect all ${N} stamps to unlock it (${d} of ${N}).</p>`:''}</section>`;
+ $$('.stop').forEach(b=>b.onclick=()=>LV[+b.dataset.n-1].run());$('#ct').onclick=cert}
+function cert(){const t=Object.values(st.stars).reduce((a,b)=>a+b,0),m=LV.length*3,r=t>=m-2?'Ticket Master 🏆':t>=m*.7?'Star Traveller ⭐':'Young Explorer 🧭';sfx.win();confetti();
+ S.innerHTML=`<section class="panel cert"><div style="font-size:3.4rem">🏅</div><h2>Certificate of Excellence</h2><p>Proudly awarded to</p><h1 class="cn">${esc(st.name||'Explorer')}</h1><p>for completing <b>Fort Ticket Quest</b><br>Grade 7 English, English in Action, Buying Tickets</p><p style="font:800 1.5rem var(--d);color:var(--sea)">${r}</p><p>Score: <b>${st.score}</b> points. Stars: <b>${t}</b> out of ${m}.</p><p style="font-weight:800">Created by T.Badria Alfalahi</p><div class="row nop" style="justify-content:center"><button class="btn g" id="a">Level map</button><button class="btn" id="b">🖨️ Print</button><button class="btn g" id="c">Start again</button></div></section>`;
+ $('#a').onclick=hub;$('#b').onclick=()=>{try{print()}catch(e){}};$('#c').onclick=()=>{st.score=0;st.stars={};upd();start()}}
+start();
+</script>
+</body>
+</html>
